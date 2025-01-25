@@ -37,4 +37,4 @@ Set environment variables in .env:
 The application exposes a search endpoint that accepts requests and returns formatted results from OCLC's Discovery API. See API_DOCUMENTATION.md for detailed endpoint specifications and example requests/responses.
 
 ## License
-Apache 2.0 - See LICENSE file
+MIT - See LICENSE file
