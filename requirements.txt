@@ -1,8 +1,8 @@
 # Core dependencies
 Flask==2.3.3
-requests==2.31.0
+requests==2.32.0
 python-dotenv==1.0.0
-gunicorn==21.2.0
+gunicorn==22.0.0
 
 # Google Cloud (for production)
 google-cloud-secret-manager==2.16.3
@@ -19,7 +19,7 @@ types-requests==2.31.0.2
 
 # Security
 flask-talisman==1.1.0  # HTTPS enforcement
-flask-cors==4.0.0      # CORS handling
+flask-cors==4.0.2      # CORS handling
 
 # Logging
 structlog==23.1.0      # Structured logging
