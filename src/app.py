@@ -1,47 +1,35 @@
 # app.py
 from flask import Flask, jsonify, request
 from src.oclc.discovery import search_worldcat, MAX_QUERY_LENGTH
-from dotenv import load_dotenv
+from src.config import Config
+import structlog
 import logging
+from flask_talisman import Talisman
+from flask_cors import CORS
 import os
-import traceback
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+# Configure structured logging
+structlog.configure(
+    processors=[
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.processors.format_exc_info,
+        structlog.processors.JSONRenderer()
+    ]
 )
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger()
 
-# Initialize Flask app
+# Initialize Flask app with config
 app = Flask(__name__)
+config = Config()
 
-# Load environment variables
-load_dotenv()
-
-# Verify environment variables are loaded
-logger.info("Checking environment variables:")
-logger.info(f"DEFAULT_SITE: {os.getenv('DEFAULT_SITE')}")
-logger.info(f"SITE_MAPPINGS: {os.getenv('SITE_MAPPINGS')}")
-
-@app.route('/test-config')
-def test_config():
-    from src.config import Config
-    config = Config()
-    return jsonify({
-        'default_site': config.DEFAULT_SITE,
-        'site_mappings': config.SITE_MAPPINGS
-    })
+# Security middleware
+Talisman(app, force_https=True)
+CORS(app)
 
 @app.route('/search', methods=['GET'])
 def search():
     """Handle search requests from Springshare"""
     try:
-        # Log request details
-        logger.info("Raw query string: %s", request.query_string.decode('utf-8'))
-        logger.info("Request args: %s", request.args)
-        logger.info("Referrer header: %s", request.referrer)
-        
         # Get and validate query
         query = request.args.get('q', '').strip()
         if not query:
@@ -71,7 +59,7 @@ def search():
             }), 400
             
         try:
-            limit = int(request.args.get('perpage', 10))
+            limit = int(request.args.get('perpage', config.DEFAULT_RESULTS_PER_PAGE))
             if limit < 1:
                 raise ValueError("Results per page must be greater than 0")
         except ValueError:
@@ -84,11 +72,6 @@ def search():
         # Get sort parameter
         sort = request.args.get('sort')
         
-        logger.info(
-            "Processing search - query: %s, page: %s, limit: %s, referrer: %s",
-            query, page, limit, request.referrer
-        )
-        
         # Perform search
         results = search_worldcat(
             query=query,
@@ -100,27 +83,24 @@ def search():
         
         # Check if there was an error
         if "error" in results:
-            logger.error("Search error: %s", results['error'])
+            logger.error("search_error", error=results['error'])
             return jsonify(results), results.get('status_code', 400)
             
         return jsonify(results)
 
     except Exception as e:
-        logger.error("Error processing search request:")
-        logger.error(traceback.format_exc())  # Log full traceback
+        logger.exception("search_failed", error=str(e))
         return jsonify({
-            "error": str(e),
+            "error": "Internal server error",
             "total_results": 0,
             "results": []
         }), 500
     
-# Health check
+# Health check endpoint
 @app.route('/health')
 def health():
     return jsonify({"status": "healthy"}), 200
 
 if __name__ == '__main__':
-    # Log startup information
-    logger.info("Starting Flask application...")
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
