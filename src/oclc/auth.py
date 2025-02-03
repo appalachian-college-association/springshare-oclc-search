@@ -1,29 +1,26 @@
-import os
-import logging
+# auth.py
 from datetime import datetime, timedelta
 from typing import Optional, Dict
 import requests
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from urllib3.util import Retry
 import base64
+import structlog
+from ..config import Config
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger()
 
 class OCLCAuth:
     """Handles OCLC authentication with improved token management"""
     
     def __init__(self):
         """Initialize authentication handler with retry strategy"""
-        self.key = os.environ.get('OCLC_KEY')
-        self.secret = os.environ.get('OCLC_SECRET')
+        self.config = Config()
+        self.key = self.config.OCLC_KEY
+        self.secret = self.config.OCLC_SECRET
         
         if not self.key or not self.secret:
-            raise ValueError("OCLC credentials not found in environment variables")
+            raise ValueError("OCLC credentials not found")
             
         self.token_url = 'https://oauth.oclc.org/token'
         self.scope = ['WorldCatDiscoveryAPI:view_brief_bib']
@@ -38,15 +35,14 @@ class OCLCAuth:
     def _create_session(self) -> requests.Session:
         """Create requests session with retry strategy"""
         retry_strategy = Retry(
-            total=3,  # number of retries
-            backoff_factor=1,  # wait 1, 2, 4 seconds between retries
+            total=3,
+            backoff_factor=1,
             status_forcelist=[429, 500, 502, 503, 504],
         )
         
         adapter = HTTPAdapter(max_retries=retry_strategy)
         session = requests.Session()
         session.mount("https://", adapter)
-        session.mount("http://", adapter)
         
         return session
         
@@ -60,17 +56,16 @@ class OCLCAuth:
         """Check if current token is valid and not near expiration"""
         if not self._token or not self._token_expiry:
             return False
-        return datetime.now() < self._token_expiry
+        return datetime.now() < self._token_expiry - timedelta(minutes=5)
         
     def get_token(self) -> Optional[Dict]:
         """Get an OAuth2 token using client credentials flow with caching"""
         try:
             # Return cached token if valid
             if self._is_token_valid():
-                logger.debug("Using cached token")
                 return self._token
                 
-            logger.info("Requesting new token")
+            logger.info("requesting_new_token")
             response = self.session.post(
                 self.token_url,
                 headers={
@@ -89,23 +84,20 @@ class OCLCAuth:
             
             # Cache token and set expiry
             self._token = token_data
-            # Set expiry 5 minutes before actual expiration
-            self._token_expiry = datetime.now() + timedelta(seconds=token_data['expires_in'] - 300)
+            self._token_expiry = datetime.now() + timedelta(seconds=token_data['expires_in'])
             
-            logger.info("Successfully obtained new token")
+            logger.info("token_obtained")
             return token_data
             
         except requests.exceptions.RequestException as e:
-            logger.error(f"Error getting token: {str(e)}")
-            if hasattr(e.response, 'text'):
-                logger.error(f"Response text: {e.response.text}")
-                
+            logger.error("token_request_failed", error=str(e))
+            
             # Return cached token if available, even if expired
             if self._token:
-                logger.warning("Using expired cached token due to refresh failure")
+                logger.warning("using_expired_token")
                 return self._token
                 
-            logger.error("No cached token available")
+            logger.error("no_token_available")
             return None
             
     def get_valid_token(self) -> Optional[str]:

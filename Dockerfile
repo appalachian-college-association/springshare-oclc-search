@@ -1,25 +1,30 @@
-Copy# Use official Python image
-FROM python:3.11-slim
+# Use official Python image with smaller footprint
+FROM python:3.11-slim-bullseye
+
+# Set environment variables before any other operations
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    FLASK_APP=src/app.py \
+    PORT=8080
 
 # Set working directory
 WORKDIR /app
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt requirements.txt
+# Install only required system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies
+# Copy requirements and install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code
+# Copy source code (exclude .env from production image)
 COPY src/ src/
-COPY .env .env
 
-# Set environment variables
-ENV PYTHONPATH=/app
-ENV FLASK_APP=src/app.py
+# Expose Cloud Run default port
+EXPOSE 8080
 
-# Expose port
-EXPOSE 5000
-
-# Use gunicorn as production server
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.app:app"]
+# Use gunicorn with appropriate settings
+CMD exec gunicorn --bind :$PORT --workers 2 --threads 8 --timeout 0 src.app:app

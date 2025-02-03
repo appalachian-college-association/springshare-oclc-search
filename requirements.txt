@@ -3,11 +3,17 @@ Flask==2.3.3
 requests==2.32.0
 python-dotenv==1.0.0
 gunicorn==22.0.0
+urllib3>=2.0.0
 
-# Google Cloud (for production)
+# Google Cloud
 google-cloud-secret-manager==2.16.3
 
-# Testing dependencies
+# Security & Monitoring
+flask-talisman==1.1.0
+flask-cors==4.0.2
+structlog==23.1.0
+
+# Testing 
 pytest==7.4.0
 pytest-env==1.0.1
 requests-mock==1.11.0
@@ -16,13 +22,3 @@ pytest-cov==4.1.0
 # Type checking
 mypy==1.5.1
 types-requests==2.31.0.2
-
-# Security
-flask-talisman==1.1.0  # HTTPS enforcement
-flask-cors==4.0.2      # CORS handling
-
-# Logging
-structlog==23.1.0      # Structured logging
-
-# Development
-flask-debugtoolbar==0.13.1  # Debug toolbar for development
