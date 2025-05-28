@@ -1,0 +1,91 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg
+*.egg-info/
+.installed.cfg
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+.ENV/
+
+# dotenv environment files
+.env
+.env.*
+env-flags*
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# MyPy / Pylint / Pyre
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS Finder metadata
+.DS_Store
+
+# macOS resource fork files
+.AppleDouble
+.LSOverride
+
+# macOS system folders
+__MACOSX/
+
+# Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+
+# Windows Explorer folder settings
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows backup and metadata files
+*.bak
+*.swp
+*.swo
+
+# Testing and cache
+run-flask.bat
+tests/
+token_test_results.json
+.cache/
+coverage.*
+.coverage
+*.cover
+.pytest_cache/
+.hypothesis/
+
+

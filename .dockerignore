@@ -1,0 +1,67 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# Environment variables
+.env
+.env.*
+env-flags*
+
+# Bytecode caches
+*.pyc
+*.pyo
+*.pyd
+
+# Package build artifacts
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Version control
+.git/
+.gitignore
+
+# Editor directories and files
+.idea/
+.vscode/
+
+# macOS Finder metadata
+.DS_Store
+
+# macOS resource fork files
+.AppleDouble
+.LSOverride
+
+# macOS system folders
+__MACOSX/
+
+# Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+
+# Windows Explorer folder settings
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows backup and metadata files
+*.bak
+*.swp
+*.swo
+
+# Testing and cache
+run-flask.bat
+tests/
+token_test_results.json
+.cache/
+coverage.*
+.pytest_cache/
