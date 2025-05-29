@@ -25,6 +25,7 @@ env-flags*
 .hypothesis/
 token_test_results.json
 run-flask.bat
+requirements-test.txt
 
 # IDE
 .idea/
@@ -45,4 +46,5 @@ $RECYCLE.BIN/
 
 # Other exclusions
 .history/
+deploy-commands.sh
 

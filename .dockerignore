@@ -22,11 +22,13 @@ tests/
 run-flask.bat
 token_test_results.json
 .coverage
+requirements-test.txt
 
 # Version control
 .git/
 .gitignore
 *.backup
+deploy-commands.sh
 
 # IDE and OS
 .idea/
