@@ -83,18 +83,18 @@ def main():
     Main function for running the test directly (not through pytest)
     This preserves the original behavior when running the file directly
     """
-    print("🔐 Testing OCLC Authentication...")
+    print("Testing OCLC Authentication...")
     print("=" * 50)
     
     try:
         test_oclc_auth()
-        print("✅ Authentication test completed successfully!")
+        print("Authentication test completed successfully!")
         success = True
     except AssertionError as e:
-        print(f"❌ Test assertion failed: {e}")
+        print(f"Test assertion failed: {e}")
         success = False
     except Exception as e:
-        print(f"❌ Error testing authentication: {str(e)}")
+        print(f"Error testing authentication: {str(e)}")
         print(f"Error type: {type(e).__name__}")
         import traceback
         traceback.print_exc()
@@ -102,9 +102,9 @@ def main():
     
     print("=" * 50)
     if success:
-        print("✅ All checks passed!")
+        print("All checks passed!")
     else:
-        print("❌ Test failed!")
+        print("Test failed!")
     
     return success
 
