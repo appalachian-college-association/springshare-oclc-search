@@ -2,7 +2,7 @@
 Flask==2.3.3
 requests==2.32.0
 python-dotenv==1.0.0
-gunicorn==22.0.0
+gunicorn>=23.0.0
 urllib3>=2.0.0
 
 # Google Cloud
@@ -10,7 +10,7 @@ google-cloud-secret-manager==2.16.3
 
 # Security & Monitoring
 flask-talisman==1.1.0
-flask-cors==4.0.2
+flask-cors==6.0.0
 structlog==23.1.0
 
 # Testing 
