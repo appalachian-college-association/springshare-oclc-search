@@ -47,4 +47,5 @@ $RECYCLE.BIN/
 # Other exclusions
 .history/
 deploy-commands.sh
+.gcloudignore
 
