@@ -75,7 +75,7 @@ Create a `.env` file based on `sample.env` and configure the following:
 
 The application exposes a search endpoint that accepts requests from LibGuides and returns formatted results from OCLC's Discovery API. 
 
-For detailed endpoint specifications, request/response examples, and integration instructions, see [API_DOCUMENTATION.md](api-docs.md).
+For detailed endpoint specifications, request/response examples, and integration instructions, see [API_DOCUMENTATION.md](API_DOCUMENTATION.md).
 
 ## Known LibGuides Limitations
 
