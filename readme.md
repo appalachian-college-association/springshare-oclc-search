@@ -133,10 +133,6 @@ pytest --cov
 pytest tests/test_discovery.py
 ```
 
-## Deployment
-
-This application is designed to deploy on Google Cloud Run. Detailed deployment instructions will be provided in the deployment documentation.
-
 ## License
 
 MIT - See [LICENSE](LICENSE) file for details.

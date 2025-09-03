@@ -48,4 +48,6 @@ $RECYCLE.BIN/
 .history/
 deploy-commands.sh
 .gcloudignore
+Dockerfile
+.dockerignore
 

@@ -155,7 +155,7 @@ SITE_MAPPINGS={"your-oclc-symbol":"your-discovery-sitename"}
 
 ### Sort Parameter Mapping
 
-The API automatically maps Springshare sort parameters to OCLC format:
+The app maps Springshare sort parameters to OCLC format:
 
 | Springshare Format | OCLC API Format |
 |-------------------|-----------------|
@@ -169,7 +169,7 @@ The API automatically maps Springshare sort parameters to OCLC format:
 
 ### URL Generation
 
-The API generates WorldCat Discovery URLs using:
+The app generates WorldCat Discovery URLs using:
 1. Configured discovery site mapping
 2. Title processing (first 20 words, special character replacement)
 3. Proper URL encoding for search queries
