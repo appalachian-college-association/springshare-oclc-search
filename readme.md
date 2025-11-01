@@ -133,6 +133,12 @@ pytest --cov
 pytest tests/test_discovery.py
 ```
 
+## Running Locally with Docker
+To test the middleware locally:
+```bash
+docker build -t springshare-oclc-search .
+docker run -p 8080:8080 springshare-oclc-search
+
 ## License
 
 MIT - See [LICENSE](LICENSE) file for details.
